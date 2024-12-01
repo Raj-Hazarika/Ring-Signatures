@@ -11,43 +11,44 @@ class RingSignature:
         self.q = 1 << (L - 1)  # large prime-like number
 
     def sign(self, message, signer_index):
-        self._permut(message)
-        s = [None] * self.n
-        u = random.randint(0, self.q)
-        c = v = self._E(u)
+        self._permut(message)  # computes the hash of the message
+        s = [None] * self.n  # initializes a list with the length as the number of members in the group
+        u = random.randint(0, self.q)  # generate random initial value
+        c = v = self._E(u)  # compute the encryption of the random value with the message hash as key
         for i in (list(range(signer_index + 1, self.n)) + list(range(signer_index))):
+            #  the loop go over all the keys except the actual signer
             s[i] = random.randint(0, self.q)
             e = self._g(s[i], self.keys[i][0], self.keys[i][2])
             v = self._E(v ^ e)
             if (i + 1) % self.n == 0:
-                c = v
+                c = v   # make sure the final value is equal to the initial value
 
-        s[signer_index] = self._g(v ^ u, self.keys[signer_index][1], self.keys[signer_index][2])
+        s[signer_index] = self._g(v ^ u, self.keys[signer_index][1], self.keys[signer_index][2])  # actual signer signs to balance the ring signature equation
         return [c] + s
 
     def verify(self, message, signature):
-        self._permut(message)
+        self._permut(message)  # computes the hash of the message
 
         def _f(i):
-            return self._g(signature[i + 1], self.keys[i][0], self.keys[i][2])
+            return self._g(signature[i + 1], self.keys[i][0], self.keys[i][2])  # use naive RSA for verifying, the ring signature is used
 
         y = list(map(_f, list(range(len(signature) - 1))))
 
         def _g(x, i):
-            return self._E(x ^ y[i])
+            return self._E(x ^ y[i])  # computes XOR
 
         r = reduce(_g, list(range(self.n)), signature[0])
         return r == signature[0]
 
     def _permut(self, message):
-        self.p = int(hashlib.sha1(message.encode()).hexdigest(), 16)
+        self.p = int(hashlib.sha1(message.encode()).hexdigest(), 16)  # compute hash
 
     def _E(self, x):
         msg = f'{x}{self.p}'
-        return int(hashlib.sha1(msg.encode()).hexdigest(), 16)
+        return int(hashlib.sha1(msg.encode()).hexdigest(), 16)  # encrypt using the message hash as the key
 
     def _g(self, x, e, n):
-        return pow(x, e, n)
+        return pow(x, e, n)  # naive RSA implementation - x**e mod n
 
 
 def is_prime(n, k=5):  # number of tests
