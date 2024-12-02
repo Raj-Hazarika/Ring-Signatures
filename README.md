@@ -1,5 +1,8 @@
 ﻿# Ring Signature
 In a ring signature scheme, the signatures produced by different group members look indistinguishable to their verifiers. Ring signatures are useful when the members do not want to cooperate. In a ring signature scheme, there are no prearranged groups of users, there are no procedures for setting, changing, or deleting groups, there is no way to distribute specialized keys, and there is no way to revoke the anonymity of the actual signer (unless he decides to expose himself). Our only assumption is that each member is already associated with the public key of some standard signature scheme such as RSA. To produce a ring signature, the actual signer declares an arbitrary set of possible signers that includes himself, and computes the signature entirely by himself using only his secret key and the others’ public keys. 
+
+You can check out the [instructional game](https://uodelana.itch.io/understanding-ring-signatures) to gather more insight regarding ring signatures.
+
 # Working
 The assumption is that each possible signer is associated with a public key Pk and the corresponding secret key is denoted by Sk. A ring signature scheme is set-up free: The signer doesn’t need knowledge, consent or assistance of the other ring members to put them in the ring – the only thing is required are their regular public keys. The two procedures involved in this scheme are as follows:
 
