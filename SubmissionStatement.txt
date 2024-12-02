@@ -1,1 +1,2 @@
-Raj Hazarika: Created the implementation for ring signature alongside the documentation complimenting the implementation.
+Raj Hazarika: Created the implementation for ring signature alongside the documentation complimenting the implementation and further explanation.
+Oba Odelana: Implemented game design for the instructional game demonstrating the concept of ring signature and assisted in the documentation.
